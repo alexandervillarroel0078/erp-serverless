@@ -1,0 +1,54 @@
+service: erp-serverless
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+  stage: dev
+  environment:
+    # La Lambda leerá esta variable para conectar a la base de datos.
+    DATABASE_URL: ${env:DATABASE_URL}
+
+functions:
+  clientes:
+    handler: lambdas/clientes/handler.lambda_handler
+    events:
+      - httpApi:
+          path: /clientes
+          method: get
+      - httpApi:
+          path: /clientes
+          method: post
+
+  ventas:
+    handler: lambdas/ventas/handler.lambda_handler
+    events:
+      - httpApi:
+          path: /ventas
+          method: get
+      - httpApi:
+          path: /ventas
+          method: post
+
+  compras:
+    handler: lambdas/compras/handler.lambda_handler
+    events:
+      - httpApi:
+          path: /compras
+          method: get
+      - httpApi:
+          path: /compras
+          method: post
+
+  inventario:
+    handler: lambdas/inventario/handler.lambda_handler
+    events:
+      - httpApi:
+          path: /inventario
+          method: get
+      - httpApi:
+          path: /inventario
+          method: put
+
