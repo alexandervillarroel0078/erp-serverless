@@ -2,6 +2,10 @@ service: erp-serverless
 
 frameworkVersion: "3"
 
+# Carga automáticamente variables desde el archivo `.env` en local
+# (útil para desarrollo académico).
+useDotenv: true
+
 provider:
   name: aws
   runtime: python3.12

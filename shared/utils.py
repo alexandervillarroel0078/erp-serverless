@@ -1,4 +1,5 @@
 import json
+import base64
 from typing import Any, Dict, Optional
 
 from sqlalchemy.orm import DeclarativeMeta
@@ -19,6 +20,13 @@ def parse_body(event: Dict[str, Any]) -> Dict[str, Any]:
     if isinstance(body, dict):
         return body
 
+    # HTTP API (payload v2) puede enviar el body codificado en base64.
+    if event.get("isBase64Encoded") is True and isinstance(body, str):
+        try:
+            body = base64.b64decode(body).decode("utf-8")
+        except Exception:
+            return {}
+
     try:
         return json.loads(body)
     except (TypeError, json.JSONDecodeError):
@@ -30,7 +38,20 @@ def get_http_method(event: Dict[str, Any]) -> str:
     Obtiene el método HTTP del evento.
     Si no existe, devuelve 'GET' por defecto.
     """
-    return (event.get("httpMethod") or "GET").upper()
+    # REST API (payload v1): event["httpMethod"]
+    method = event.get("httpMethod")
+    if method:
+        return str(method).upper()
+
+    # HTTP API (payload v2): event["requestContext"]["http"]["method"]
+    try:
+        method = event["requestContext"]["http"]["method"]
+        if method:
+            return str(method).upper()
+    except Exception:
+        pass
+
+    return "GET"
 
 
 def get_query_param(

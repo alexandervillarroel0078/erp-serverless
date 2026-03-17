@@ -1,7 +1,8 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
 from lambdas.clientes.handler import lambda_handler as clientes_handler
 from lambdas.compras.handler import lambda_handler as compras_handler
@@ -9,6 +10,37 @@ from lambdas.inventario.handler import lambda_handler as inventario_handler
 from lambdas.ventas.handler import lambda_handler as ventas_handler
 
 app = FastAPI(title="Local API Gateway Simulator")
+
+
+# -----------------------------
+# Esquemas (para Swagger /docs)
+# -----------------------------
+class ClienteCreate(BaseModel):
+    nombre: str = Field(..., min_length=1)
+    telefono: Optional[str] = None
+    email: Optional[str] = None
+    direccion: Optional[str] = None
+
+
+class ItemLinea(BaseModel):
+    producto_id: int
+    cantidad: int = Field(..., gt=0)
+    precio: float = Field(..., ge=0)
+
+
+class VentaCreate(BaseModel):
+    cliente_id: int
+    items: List[ItemLinea]
+
+
+class CompraCreate(BaseModel):
+    proveedor: str = Field(..., min_length=1)
+    items: List[ItemLinea]
+
+
+class InventarioUpdate(BaseModel):
+    producto_id: int
+    stock_actual: int = Field(..., ge=0)
 
 
 def build_event(request: Request, body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -55,30 +87,26 @@ def run_lambda(handler, event):
 
 
 @app.post("/clientes")
-async def post_clientes(request: Request):
-    payload = await request.json() if request.headers.get("content-type", "").startswith("application/json") else {}
-    event = build_event(request, payload)
+async def post_clientes(body: ClienteCreate, request: Request):
+    event = build_event(request, body.model_dump())
     return run_lambda(clientes_handler, event)
 
 
 @app.post("/ventas")
-async def post_ventas(request: Request):
-    payload = await request.json() if request.headers.get("content-type", "").startswith("application/json") else {}
-    event = build_event(request, payload)
+async def post_ventas(body: VentaCreate, request: Request):
+    event = build_event(request, body.model_dump())
     return run_lambda(ventas_handler, event)
 
 
 @app.post("/compras")
-async def post_compras(request: Request):
-    payload = await request.json() if request.headers.get("content-type", "").startswith("application/json") else {}
-    event = build_event(request, payload)
+async def post_compras(body: CompraCreate, request: Request):
+    event = build_event(request, body.model_dump())
     return run_lambda(compras_handler, event)
 
 
-@app.post("/inventario")
-async def post_inventario(request: Request):
-    payload = await request.json() if request.headers.get("content-type", "").startswith("application/json") else {}
-    event = build_event(request, payload)
+@app.put("/inventario")
+async def put_inventario(body: InventarioUpdate, request: Request):
+    event = build_event(request, body.model_dump())
     return run_lambda(inventario_handler, event)
 
 

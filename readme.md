@@ -58,7 +58,9 @@ Usas:
 Pero normalmente no lo exigen en universidad.
 
 
-
+git add . 
+git commit -m "nuevo" 
+git push origin main
 
 
 
