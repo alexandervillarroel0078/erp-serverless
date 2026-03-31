@@ -1,2 +1,49 @@
+# 🔹 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# 🔹 Entorno virtual
 venv/
+.env/
+.env.*
+
+# 🔹 Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 🔹 Serverless
+.serverless/
+.serverless_plugins/
+
+# 🔹 Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# 🔹 Logs
+*.log
+
+# 🔹 VS Code
+.vscode/
+
+# 🔹 Archivos temporales
+*.tmp
+*.temp
+
+# 🔹 Base de datos local (si usas SQLite por ejemplo)
+*.db
+
+# 🔹 Archivos sensibles
 .env
+.env.local
+
+# 🔹 Cache
+.cache/

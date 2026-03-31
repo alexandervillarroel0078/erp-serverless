@@ -1,58 +1,66 @@
+# nombre de tu proyecto.
 service: erp-serverless
 
 frameworkVersion: "3"
 
+plugins:
+  - serverless-offline
 # Carga automáticamente variables desde el archivo `.env` en local
 # (útil para desarrollo académico).
 useDotenv: true
 
 provider:
+  # El proveedor de nube que se va a utilizar (en este caso, AWS).
   name: aws
+  # lenguaje y versión de tus funciones Lambda.
   runtime: python3.12
+  # región de AWS donde se desplegaría.
   region: us-east-1
+  # entorno (dev, prod, test).
   stage: dev
   environment:
-    # La Lambda leerá esta variable para conectar a la base de datos.
     DATABASE_URL: ${env:DATABASE_URL}
 
+# Define las funciones Lambda
 functions:
+  # es el nombre de la función Lambda 
   clientes:
     handler: lambdas/clientes/handler.lambda_handler
+    # triggers que hacen que la función se ejecute
     events:
-      - httpApi:
+      - http:
           path: /clientes
           method: get
-      - httpApi:
+      - http:
           path: /clientes
           method: post
 
   ventas:
     handler: lambdas/ventas/handler.lambda_handler
     events:
-      - httpApi:
+      - http:
           path: /ventas
           method: get
-      - httpApi:
+      - http:
           path: /ventas
           method: post
 
   compras:
     handler: lambdas/compras/handler.lambda_handler
     events:
-      - httpApi:
+      - http:
           path: /compras
           method: get
-      - httpApi:
+      - http:
           path: /compras
           method: post
 
   inventario:
     handler: lambdas/inventario/handler.lambda_handler
     events:
-      - httpApi:
+      - http:
           path: /inventario
           method: get
-      - httpApi:
+      - http:
           path: /inventario
           method: put
-

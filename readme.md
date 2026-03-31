@@ -77,7 +77,7 @@ erp-serverless/
 │   │
 │   ├── compras/
 │   │   ├── handler.py
-│   │   └── service.py
+│   │   └── service.py 
 │   │
 │   ├── ventas/
 │   │   ├── handler.py
@@ -95,6 +95,8 @@ erp-serverless/
 │   ├── utils.py
 │   └── response.py
 │
+├── .env
+├── local_api.py
 ├── requirements.txt
 ├── serverless.yml
 └── README.md
@@ -139,13 +141,13 @@ venv\Scripts\activate
 pip install -r requirements.txt
 python -m script.create_tables
 
-
+uvicorn local_api:app --reload
 
 python
 exit()
 
 
-
+pip freeze > requirements.txt
 
 
 
@@ -192,6 +194,8 @@ erp-serverless/
 │   └── response.py
 │
 ├──.env
+├──package-lock.json
+├──package.json
 ├── requirements.txt
 ├── serverless.yml
 └── README.md
@@ -329,3 +333,68 @@ PUT /inventario
 8. El código debe ser claro y bien comentado porque es un proyecto académico.
 
 Genera todos los archivos completos con su contenido.
+
+
+
+
+
+
+
+
+
+
+
+
+1. ¿Qué es serverless?
+
+👉 Modelo donde:
+
+No gestionas servidores
+El proveedor (AWS) se encarga de todo
+Pagas solo por ejecución
+2. ¿Qué es Lambda?
+
+👉 AWS Lambda
+
+Respuesta corta:
+
+Es un servicio que ejecuta código en respuesta a eventos sin necesidad de servidores.
+
+3. ¿Qué hace API Gateway?
+
+👉 Amazon API Gateway
+
+Respuesta:
+
+Recibe las peticiones HTTP y las envía a Lambda usando un proxy.
+
+4. ¿Qué es “proxy integration”?
+
+👉 CLAVE (seguro cae)
+
+Respuesta:
+
+Es cuando API Gateway envía toda la request directamente a Lambda sin modificarla.
+
+5. ¿Para qué sirve Mangum?
+
+👉 Mangum
+
+Respuesta:
+
+Permite ejecutar aplicaciones FastAPI dentro de Lambda convirtiendo la request al formato ASGI.
+
+6. ¿Por qué dividir en varias Lambdas?
+
+Respuesta:
+
+Separación de responsabilidades
+Mejor organización
+Escalabilidad
+7. ¿Qué hace la base de datos?
+
+👉 Amazon RDS
+
+Respuesta:
+
+Almacena la información persistente del sistema (clientes, ventas, inventario).

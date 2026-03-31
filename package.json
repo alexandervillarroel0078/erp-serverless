@@ -1,0 +1,23 @@
+{
+  "name": "erp-serverless",
+  "version": "1.0.0",
+  "description": "Arquitectura Serverless ERP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandervillarroel0078/erp-serverless.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexandervillarroel0078/erp-serverless/issues"
+  },
+  "homepage": "https://github.com/alexandervillarroel0078/erp-serverless#readme",
+  "devDependencies": {
+    "serverless-offline": "^14.5.0"
+  }
+}
