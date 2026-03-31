@@ -1,101 +1,98 @@
 🚀 Flujo completo para subir a AWS
-1) Preparar el proyecto
 
-Revisar que tu estructura esté bien:
 
-erp-serverless/
-├── lambdas/
-├── database/
-├── shared/
-├── requirements.txt
-├── serverless.yml
 
-Y que cada handler.py tenga una función principal, por ejemplo:
 
-def main(event, context):
-    return {
-        "statusCode": 200,
-        "body": "Hola AWS"
-    }
-2) Configurar AWS
 
-Instalar AWS CLI y ejecutar:
+```text
+🚀 DESPLIEGUE ERP-SERVERLESS A AWS (ORDEN CORRECTO)
+
+1) CREAR BASE DE DATOS (RDS)  ← PRIMERO
+------------------------------------------------
+AWS Console
+→ Buscar: RDS
+→ Create database
+→ Standard create
+→ PostgreSQL
+→ Free tier
+→ DB instance identifier: erp-db
+→ Master username: postgres
+→ Master password: ********
+→ Create database
+
+Esperar 5 minutos aprox.
+
+Guardar el endpoint que te da, ejemplo:
+erp-db.xxxxxxx.us-east-1.rds.amazonaws.com
+
+
+2) CREAR USUARIO IAM + ACCESS KEYS  ← SEGUNDO
+------------------------------------------------
+AWS Console
+→ Buscar: IAM
+→ Users
+→ Create user
+→ Nombre: erp-deploy
+→ Attach policies directly
+→ Marcar: AdministratorAccess
+→ Create user
+
+Luego:
+→ Entrar al usuario
+→ Security credentials
+→ Create access key
+→ CLI
+
+Guardar:
+Access Key ID
+Secret Access Key
+
+
+3) CONFIGURAR AWS CLI  ← TERCERO
+------------------------------------------------
+En terminal:
 
 aws configure
 
-Aquí conectas tu PC con tu cuenta de AWS.
+Pegar:
+- Access Key ID
+- Secret Access Key
+- Region: us-east-1
+- Output: json
 
-3) Configurar Serverless
 
-Instalar:
+4) CONFIGURAR .env  ← CUARTO
+------------------------------------------------
+Crear o editar .env
 
-npm install -g serverless
+DATABASE_URL=postgresql://postgres:TU_PASSWORD@erp-db.xxxxxxx.us-east-1.rds.amazonaws.com:5432/postgres
 
-Luego iniciar sesión:
 
-serverless login
-4) Revisar serverless.yml
+5) IR A LA CARPETA DEL PROYECTO  ← QUINTO
+------------------------------------------------
+cd erp-serverless
 
-Este paso es muy importante porque ahí defines:
 
-nombre del proyecto
-runtime de Python
-funciones Lambda
-rutas HTTP
-stage (dev, prod)
-
-Ejemplo:
-
-service: erp-serverless
-
-provider:
-  name: aws
-  runtime: python3.11
-  region: us-east-1
-
-functions:
-  clientes:
-    handler: lambdas/clientes/handler.main
-    events:
-      - http:
-          path: clientes
-          method: post
-5) Instalar dependencias
-
-Para que suba todo bien:
-
-pip install -r requirements.txt
-
-Si usas plugins, instalarlos también.
-
-6) Probar localmente (recomendado)
-
-Antes de subir, prueba:
-
-serverless offline
-
-Así verificas que responde.
-
-7) 🚀 Deploy
-
-El paso de subir:
-
+6) DESPLEGAR A AWS  ← SEXTO
+------------------------------------------------
 serverless deploy
 
-Este es el paso “grande”.
 
-8) Probar en AWS
+7) RESULTADO
+------------------------------------------------
+Serverless automáticamente:
 
-Copias la URL que te devuelve:
+1. empaqueta tu código
+2. crea archivo zip
+3. lo sube a AWS
+4. crea las Lambdas
+5. crea API Gateway
+6. conecta las rutas
+7. te devuelve las URLs
 
+Ejemplo:
 https://xxxxx.execute-api.us-east-1.amazonaws.com/dev/clientes
+```
 
-La pruebas en Postman.
 
-9) Revisar logs (MUY importante)
-
-Si algo falla:
-
-serverless logs -f clientes
-
-Esto te muestra errores de la Lambda.
+ 
