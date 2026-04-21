@@ -152,9 +152,9 @@ pip freeze > requirements.txt
 
 
 
-
-
-
+git add .
+git commit -m "nuevo"
+git push origin main
 
 
 
